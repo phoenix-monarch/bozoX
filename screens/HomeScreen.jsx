@@ -4,6 +4,8 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
+  BackHandler,
 } from "react-native";
 import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -39,7 +41,22 @@ const HomeScreen = ({ navigation }) => {
     );
     setAnimeMovies(response.data);
   };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     // BackHandler.exitApp();
+  //     return true;
+  //   };
 
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
+
+  //   return () => backHandler.remove();
+  // }, []);
+  //  alert on trying to exit app
+  
+    
   useEffect(() => {
     getRecentEpisodes();
     getPopularAnime();
@@ -86,112 +103,146 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
 
-      {recentepisodes.length === 0 ||
-        popularanime.length === 0 ||
-        (animemovies.length === 0 ? (
-          <View
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => {
+              setAnimeMovies([]);
+              setPopularAnime([]);
+              setRecentEpisodes([]);
+              getRecentEpisodes();
+              getPopularAnime();
+              getAnimeMovies();
+            }}
+          />
+        }
+      >
+        {/*  appbar */}
+
+        {/*  recent episodes */}
+        <View
+          style={{
+            paddingTop: 20,
+          }}
+        >
+          <Text
             style={{
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
+              fontFamily: "Comfortaa_700Bold",
+              color: colorScheme === "dark" ? "#fff" : "#000",
+              fontSize: 20,
             }}
           >
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/*  appbar */}
-
-            {/*  recent episodes */}
+            Recent Episodes
+          </Text>
+          {recentepisodes.length === 0 ? (
             <View
               style={{
-                paddingTop: 20,
+                height: 250,
+                justifyContent: "center",
               }}
             >
-              <Text
-                style={{
-                  fontFamily: "Comfortaa_700Bold",
-                  color: colorScheme === "dark" ? "#fff" : "#000",
-                  fontSize: 20,
-                }}
-              >
-                Recent Episodes
-              </Text>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                {recentepisodes.map((item, key) => (
-                  <Item
-                    key={key}
-                    title={item.animeTitle}
-                    image={item.animeImg}
-                  />
-                ))}
-              </ScrollView>
+              <ActivityIndicator size="large" color="#0000ff" />
             </View>
+          ) : (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {recentepisodes.map((item, key) => (
+                <Item
+                  key={key}
+                  title={item.animeTitle}
+                  id={item.animeId}
+                  image={item.animeImg}
+                />
+              ))}
+            </ScrollView>
+          )}
+        </View>
 
-            {/*  popular anime */}
+        {/*  popular anime */}
+        <View>
+          <Text
+            style={{
+              fontFamily: "Comfortaa_700Bold",
+              color: colorScheme === "dark" ? "#fff" : "#000",
+              fontSize: 20,
+            }}
+          >
+            Popular Anime
+          </Text>
+          {popularanime.length === 0 ? (
             <View
               style={{
-                paddingTop: 20,
+                height: 250,
+                justifyContent: "center",
               }}
             >
-              <Text
-                style={{
-                  fontFamily: "Comfortaa_700Bold",
-                  color: colorScheme === "dark" ? "#fff" : "#000",
-                  fontSize: 20,
-                }}
-              >
-                Popular Anime
-              </Text>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                {popularanime.map((item, key) => (
-                  <Item
-                    key={key}
-                    title={item.animeTitle}
-                    image={item.animeImg}
-                    status={item.releasedDate}
-                  />
-                ))}
-              </ScrollView>
+              <ActivityIndicator size="large" color="#0000ff" />
             </View>
+          ) : (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {popularanime.map((item, key) => (
+                <Item
+                  key={key}
+                  title={item.animeTitle}
+                  image={item.animeImg}
+                  status={item.releasedDate}
+                  id={item.animeId}
+                  animeid={item.animeId}
+                />
+              ))}
+            </ScrollView>
+          )}
+        </View>
 
-            {/*  anime movies */}
+        {/*  anime movies */}
+        <View
+          style={{
+            paddingTop: 20,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Comfortaa_700Bold",
+              color: colorScheme === "dark" ? "#fff" : "#000",
+              fontSize: 20,
+            }}
+          >
+            Anime Movies
+          </Text>
+          {animemovies.length === 0 ? (
             <View
               style={{
-                paddingTop: 20,
+                height: 250,
+                justifyContent: "center",
               }}
             >
-              <Text
-                style={{
-                  fontFamily: "Comfortaa_700Bold",
-                  color: colorScheme === "dark" ? "#fff" : "#000",
-                  fontSize: 20,
-                }}
-              >
-                Anime Movies
-              </Text>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                {animemovies.map((item, key) => (
-                  <Item
-                    key={key}
-                    title={item.animeTitle}
-                    image={item.animeImg}
-                    status={item.releasedDate}
-                  />
-                ))}
-              </ScrollView>
+              <ActivityIndicator size="large" color="#0000ff" />
             </View>
-          </ScrollView>
-        ))}
+          ) : (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {animemovies.map((item, key) => (
+                <Item
+                  key={key}
+                  title={item.animeTitle}
+                  id={item.animeId}
+                  image={item.animeImg}
+                  status={item.releasedDate}
+                />
+              ))}
+            </ScrollView>
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

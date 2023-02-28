@@ -18,8 +18,8 @@ const Item = (props) => {
         navigation.navigate("Anime", {
           title: props.title,
           image: props.image,
-          status: props.status,
-          animeid: props.animeid,
+          status: props.releaseDate,
+          id: props.id,
         });
       }}
     >
@@ -44,7 +44,7 @@ const Item = (props) => {
             fontSize: 14,
           }}
         >
-          {props.status}
+          {props.releaseDate}
         </Text>
       </View>
     </TouchableOpacity>

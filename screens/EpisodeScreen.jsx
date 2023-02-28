@@ -19,6 +19,7 @@ const EpisodeScreen = () => {
   const [episodeinfo, setEpisodeInfo] = useState([]);
   const [animeinfo, setAnimeInfo] = useState([]);
   const [orientation, setOrientation] = useState("PORTRAIT_UP");
+  const [playbackurl, setPlaybackUrl] = useState("");
   const route = useRoute();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
@@ -28,19 +29,23 @@ const EpisodeScreen = () => {
   const getEpisodeInfo = async () => {
     try {
       const response = await axios.get(
-        `https://animeapi.jabed.me/zoro/watch/${episodeId}`
+        `https://bozo.jabed.me/anime/gogoanime/watch/${episodeId}`
       );
       setEpisodeInfo(response.data);
+      // console.log(response.data);
+      setPlaybackUrl(response?.data?.sources[2]?.url);
     } catch (err) {}
   };
   const getAnimeInfo = async () => {
     try {
       const response = await axios.get(
-        `https://animeapi.jabed.me/zoro/info/${animeId}`
+        `https://bozo.jabed.me/anime/gogoanime/info/${animeId}`
       );
       setAnimeInfo(response.data);
     } catch (err) {}
   };
+  // console.log(episodeinfo.sources[2].url);
+  console.log(playbackurl);
   useEffect(() => {
     getEpisodeInfo();
     getAnimeInfo();
@@ -96,7 +101,9 @@ const EpisodeScreen = () => {
             }}
           >
             <Video
-              source={{ uri: episodeinfo?.sources?.[0]?.file }}
+              source={{
+                uri: "https://wwwx16.gofcdn.com/videos/hls/tK9YbCFbsEvZHuYETn_N0g/1677607159/10625/a80af13ae85820b664b87e68fa55f4c8/ep.2.1657689175.720.m3u8",
+              }}
               useNativeControls
               PosterComponent={
                 <Image

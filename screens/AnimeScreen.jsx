@@ -1,4 +1,12 @@
-import { View, Text, ActivityIndicator, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Alert,
+  // ScrollView,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import axios from "axios";
 import { useColorScheme } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -13,14 +21,15 @@ const AnimeScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
-  const { title, animeid, image } = route.params;
+  const { title, id, image } = route.params;
   const [info, setInfo] = useState([]);
   const [loading, setLoading] = useState(false);
   const getinfo = async () => {
     try {
       setLoading(true);
+      setInfo([]);
       const response = await axios.get(
-        `https://animeapi.jabed.me/zoro/info/${animeid}`
+        `https://bozo.jabed.me/anime/gogoanime/info/${id}`
       );
       setInfo(response.data);
       setLoading(false);
@@ -39,183 +48,187 @@ const AnimeScreen = () => {
         padding: 10,
       }}
     >
-      <ScrollView>
-        <View
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <Icon
+          name="arrow-back-ios"
+          color={colorScheme === "dark" ? "#fff" : "#000"}
+          size={28}
+          onPress={() => navigation.goBack()}
+        />
+        <Text
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            color: colorScheme === "dark" ? "#fff" : "#000",
+            fontSize: 28,
           }}
         >
-          <Icon
-            name="arrow-back-ios"
-            color={colorScheme === "dark" ? "#fff" : "#000"}
-            size={28}
-            onPress={() => navigation.goBack()}
-          />
+          watch
+        </Text>
+      </View>
+      {/* <ScrollView> */}
+      <View
+        style={{
+          paddingVertical: 10,
+          paddingHorizontal: 10,
+          marginTop: 20,
+          backgroundColor: colorScheme === "dark" ? "#2B3467" : "#B4E4FF",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <Image
+          source={{ uri: image }}
+          style={{ width: 100, height: 150, padding: 10 }}
+        />
+        <View>
           <Text
             style={{
               color: colorScheme === "dark" ? "#fff" : "#000",
-              fontSize: 28,
+              fontSize: 20,
+              width: 220,
+              paddingLeft: 10,
+              fontWeight: "bold",
             }}
           >
-            watch
+            {title}
           </Text>
-        </View>
-        <View
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            marginTop: 20,
-            backgroundColor: colorScheme === "dark" ? "#2B3467" : "#B4E4FF",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          <Image
-            source={{ uri: image }}
-            style={{ width: 100, height: 150, padding: 10 }}
-          />
-          <View>
+          {info?.totalEpisodes && (
             <Text
               style={{
                 color: colorScheme === "dark" ? "#fff" : "#000",
-                fontSize: 20,
-                width: 220,
+                fontSize: 16,
                 paddingLeft: 10,
-                fontWeight: "bold",
               }}
             >
-              {title}
+              Total Episodes:
+              {info?.totalEpisodes}
             </Text>
-            {info?.totalEpisodes && (
-              <Text
-                style={{
-                  color: colorScheme === "dark" ? "#fff" : "#000",
-                  fontSize: 16,
-                  paddingLeft: 10,
-                }}
-              >
-                Total Episodes:
-                {info?.totalEpisodes}
-              </Text>
-            )}
-            {info?.type && (
-              <Text
-                style={{
-                  color: colorScheme === "dark" ? "#fff" : "#000",
-                  fontSize: 16,
-                  paddingLeft: 10,
-                }}
-              >
-                Type:
-                {info?.type}
-              </Text>
-            )}
-          </View>
-          <Icon
-            name="playlist-add"
-            style={{ paddingLeft: 10, marginTop: 120 }}
-            color="white"
+          )}
+          {info?.type && (
+            <Text
+              style={{
+                color: colorScheme === "dark" ? "#fff" : "#000",
+                fontSize: 16,
+                paddingLeft: 10,
+              }}
+            >
+              Type:
+              {info?.type}
+            </Text>
+          )}
+        </View>
+        <Icon
+          name="playlist-add"
+          style={{ paddingLeft: 10, marginTop: 120 }}
+          color="white"
+          onPress={() => {
+            saveSearch(title, id, image);
+            Alert.alert("Saved", "Added to library", [
+              {
+                text: "OK",
+                style: "cancel",
+              },
+            ]);
+          }}
+        />
+      </View>
+      {loading && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color={colorScheme === "dark" ? "#fff" : "#000"}
+          />
+        </View>
+      )}
+      <View
+        style={{
+          paddingVertical: 10,
+        }}
+      >
+        <Text
+          style={{
+            color: colorScheme === "dark" ? "#fff" : "#000",
+          }}
+        >
+          {info?.description?.length > 200
+            ? info?.description.slice(0, 200) + "..."
+            : info?.description}
+        </Text>
+        {info?.description?.length > 200 && (
+          <Text
+            style={{
+              color: colorScheme === "dark" ? "#fff" : "#000",
+            }}
             onPress={() => {
-              saveSearch(title, animeid, image);
-              Alert.alert("Saved", "Added to library", [
+              Alert.alert("Synopsis", info?.description, [
                 {
                   text: "OK",
                   style: "cancel",
                 },
               ]);
             }}
-          />
-        </View>
-        {loading && (
-          <ActivityIndicator
-            size="large"
-            color={colorScheme === "dark" ? "#fff" : "#000"}
-            style={{ marginTop: 20 }}
-          />
+          >
+            Read More
+          </Text>
         )}
-        <View
-          style={{
-            paddingVertical: 10,
-          }}
-        >
+      </View>
+      <View>
+        {info?.episodes?.length > 0 && (
           <Text
             style={{
               color: colorScheme === "dark" ? "#fff" : "#000",
+              fontSize: 20,
             }}
           >
-            {info?.synopsis?.length > 200
-              ? info?.synopsis.slice(0, 200) + "..."
-              : info?.synopsis}
+            Episodes
           </Text>
-          {info?.synopsis?.length > 200 && (
-            <Text
-              style={{
-                color: colorScheme === "dark" ? "#fff" : "#000",
-              }}
-              onPress={() => {
-                Alert.alert("Synopsis", info?.synopsis, [
-                  {
-                    text: "OK",
-                    style: "cancel",
-                  },
-                ]);
-              }}
-            >
-              Read More
-            </Text>
-          )}
-        </View>
-        <View>
-          {info?.episodes?.length > 0 && (
-            <Text
-              style={{
-                color: colorScheme === "dark" ? "#fff" : "#000",
-                fontSize: 20,
-              }}
-            >
-              Episodes
-            </Text>
-          )}
-          {info?.episodes?.map((ep, key) => (
+        )}
+        {/* {info?.episodes?.map((ep, key) => (
             <EpisodeItem
               key={key}
-              episodeId={ep.episodeId}
-              episodeName={ep.episodeName}
-              epNum={ep.epNum}
+              episodeId={ep.id}
+              episodeName={ep.id}
+              epNum={ep.number}
               image={image}
               animeName={title}
-              animeId={animeid}
+              animeId={id}
             />
-          ))}
-        </View>
-        {info?.episodes?.length > 3 && (
-          <View
-            style={{
-              display: "flex",
-              paddingVertical: 10,
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: colorScheme === "dark" ? "#fff" : "#000",
-                fontSize: 20,
-                paddingRight: 10,
-              }}
-            >
-              You have reached the end
-            </Text>
-            <Icon
-              name="done-all"
-              color={colorScheme === "dark" ? "#fff" : "#000"}
-              size={28}
+          ))} */}
+        <FlatList
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={loading}
+          //     onRefresh={getinfo}
+          //     colors={["#B4E4FF"]}
+          //     // progressBackgroundColor="#B4E4FF"
+          //   />
+          // }
+          data={info?.episodes}
+          renderItem={({ item }) => (
+            <EpisodeItem
+              episodeId={item.id}
+              episodeName={item.id}
+              epNum={item.number}
+              image={image}
+              animeName={title}
+              animeId={id}
             />
-          </View>
-        )}
-      </ScrollView>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };

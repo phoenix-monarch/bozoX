@@ -17,8 +17,8 @@ const Genere = (props) => {
       style={{
         backgroundColor:
           backgroundColors[Math.floor(Math.random() * backgroundColors.length)],
-        height: 100,
-        width: 170,
+        height: 80,
+        width: 160,
         alignContent: "center",
         justifyContent: "flex-end",
         borderRadius: 10,
@@ -34,7 +34,7 @@ const Genere = (props) => {
       <Text
         style={{
           color: "#fff",
-          fontSize: 24,
+          fontSize: 20,
           paddingHorizontal: 10,
           marginBottom: 10,
           fontWeight: "bold",

@@ -1,5 +1,11 @@
-import { useColorScheme, Text, View, ScrollView } from "react-native";
-import React from "react";
+import {
+  useColorScheme,
+  Text,
+  View,
+  ScrollView,
+  BackHandler,
+} from "react-native";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts, Comfortaa_600SemiBold } from "@expo-google-fonts/comfortaa";
 import Genere from "./components/Genere";
@@ -10,6 +16,20 @@ const BrowseScreen = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     Comfortaa_600SemiBold,
   });
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Home");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -31,7 +51,7 @@ const BrowseScreen = ({ navigation }) => {
       >
         Browse
       </Text>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SearchBar
           containerStyle={{
             backgroundColor: "transparent",
@@ -47,34 +67,25 @@ const BrowseScreen = ({ navigation }) => {
         <View
           style={{
             flexDirection: "row",
+            justifyContent: "space-between",
             flexWrap: "wrap",
           }}
         >
           <Genere name="action" />
           <Genere name="adventure" />
-          <Genere name="cars" />
           <Genere name="comedy" />
           <Genere name="crime" />
           <Genere name="dementia" />
           <Genere name="demons" />
           <Genere name="drama" />
-          <Genere name="dub" />
           <Genere name="ecchi" />
-          <Genere name="family" />
           <Genere name="fantasy" />
-          <Genere name="harem" />
-          <Genere name="historical" />
           <Genere name="horror" />
           <Genere name="josei" />
-          <Genere name="kids" />
-          <Genere name="magic" />
           <Genere name="martial-arts" />
           <Genere name="mecha" />
-          <Genere name="military" />
-          <Genere name="mmusic" />
           <Genere name="mystery" />
           <Genere name="parody" />
-          <Genere name="police" />
           <Genere name="psychological" />
           <Genere name="romance" />
           <Genere name="samurai" />
@@ -86,7 +97,6 @@ const BrowseScreen = ({ navigation }) => {
           <Genere name="slice-of-life" />
           <Genere name="space" />
           <Genere name="sports" />
-          <Genere name="super-power" />
           <Genere name="supernatural" />
           <Genere name="suspense" />
           <Genere name="thriller" />

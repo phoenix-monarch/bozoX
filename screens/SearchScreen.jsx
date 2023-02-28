@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, useColorScheme, View, Text } from "react-native";
+import { ScrollView, useColorScheme, View } from "react-native";
 import { SearchBar } from "@rneui/themed";
 import { useState } from "react";
 import Lottie from "lottie-react-native";
@@ -18,9 +18,9 @@ const SearchScreen = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://animeapi.jabed.me/zoro/search?keyw=${searchkeyowrd}`
+        `https://bozo.jabed.me/anime/gogoanime/${searchkeyowrd}`
       );
-      setResults(response.data);
+      setResults(response.data.results);
       setLoading(false);
     } catch (err) {
       setErrorMessage("Something went wrong");
@@ -60,21 +60,21 @@ const SearchScreen = () => {
       {errorMessage ? (
         <Lottie source={require("../assets/animations/error.json")} autoPlay />
       ) : null}
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
+            flex: 1,
             flexDirection: "row",
             flexWrap: "wrap",
-            justifyContent: "space-between",
           }}
         >
           {results.map((item, key) => (
             <Item
               key={key}
-              animeid={item.animeId}
-              title={item.animeTitle}
-              image={item.animeImg}
-              status={item.status}
+              id={item.id}
+              title={item.title}
+              image={item.image}
+              releaseDate={item.releaseDate}
             />
           ))}
         </View>

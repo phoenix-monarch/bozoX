@@ -5,14 +5,15 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  BackHandler,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import { useFonts, Comfortaa_700Bold } from "@expo-google-fonts/comfortaa";
 import ListItem from "./components/ListItem";
 import { openLink } from "../lib/OpenLink";
-
+import { links } from "../lib/config/links";
 const SettingsScreen = ({ navigation }) => {
   const colorScheme = useColorScheme();
   const version = "0.0.2";
@@ -21,10 +22,22 @@ const SettingsScreen = ({ navigation }) => {
     Comfortaa_700Bold,
   });
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Home");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   if (!fontsLoaded) {
     return null;
   }
-
   return (
     <SafeAreaView
       style={{
@@ -58,7 +71,7 @@ const SettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              Alert.alert("Coming soon", "This feature is coming soon.");
+              navigation.navigate("Translations");
             }}
           >
             <ListItem icon="translate" title="Translations" />
@@ -92,16 +105,14 @@ const SettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              openLink(
-                "https://github.com/jabedzaman/bozo/issues/new?assignees=&labels=enhancement&template=feature_request.md&title="
-              );
+              openLink(links.feedbackUrl);
             }}
           >
             <ListItem icon="thumb-up" title="Feedback and suggestions" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              openLink("https://patreon.com/jabedzaman");
+              openLink(links.supportUrl);
             }}
           >
             <ListItem icon="attach-money" title="Support" />

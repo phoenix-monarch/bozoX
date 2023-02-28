@@ -15,21 +15,51 @@ import AnimeScreen from "./screens/AnimeScreen";
 import EpisodeScreen from "./screens/EpisodeScreen";
 import GenereScreen from "./screens/GenereScreen";
 import AccountScreen from "./screens/extras/AccountScreen";
+import TranslationScreen from "./screens/extras/TranslationScreen";
+import Splash from "./screens/Splash";
+import AuthScreen from "./screens/auth/AuthScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, []);
+  // if (loading) {
+  //   return <Splash />;
+  // }
   return (
     <NavigationContainer>
       <ExpoStatusBar style="auto" />
       <Stack.Navigator>
+        {loading ? (
+          <Stack.Screen
+            name="Tabs"
+            options={{
+              headerShown: false,
+            }}
+            component={Splash}
+          />
+        ) : (
+          <Stack.Screen
+            name="Tabs"
+            options={{
+              headerShown: false,
+            }}
+            component={Tabs}
+          />
+        )}
         <Stack.Screen
-          name="Tabs"
+          name="Auth"
           options={{
             headerShown: false,
           }}
-          component={Tabs}
+          component={AuthScreen}
         />
         <Stack.Screen
           name="Anime"
@@ -60,6 +90,13 @@ export default function App() {
           component={GenereScreen}
         />
         <Stack.Screen
+          name="Translations"
+          options={{
+            headerShown: false,
+          }}
+          component={TranslationScreen}
+        />
+        <Stack.Screen
           name="About"
           options={{
             headerShown: false,
@@ -82,7 +119,9 @@ function Tabs() {
   const scheme = useColorScheme();
   return (
     <Tab.Navigator
-      shifting={true}
+      style={{ backgroundColor: scheme === "dark" ? "#171717" : "#fff" }}
+      sceneAnimationEnabled="true"
+      sceneAnimationType="shifting"
       initialRouteName="Home"
       barStyle={{
         backgroundColor: scheme === "dark" ? "#171717" : "#fff",

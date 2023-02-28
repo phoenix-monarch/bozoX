@@ -1,11 +1,11 @@
-import { useColorScheme, Text, ScrollView } from "react-native";
+import { useColorScheme, Text, ScrollView, BackHandler } from "react-native";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts, Comfortaa_600SemiBold } from "@expo-google-fonts/comfortaa";
 import Lottie from "lottie-react-native";
 import { loadSearches } from "../lib/LoadSearches";
 
-const LibraryScreen = () => {
+const LibraryScreen = ({ navigation }) => {
   const colorScheme = useColorScheme();
   useEffect(() => {
     loadSearches();
@@ -14,6 +14,19 @@ const LibraryScreen = () => {
     Comfortaa_600SemiBold,
   });
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Home");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   if (!loaded) {
     return null;
   }
