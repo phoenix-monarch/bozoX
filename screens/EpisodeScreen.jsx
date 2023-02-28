@@ -11,7 +11,7 @@ import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon, Image } from "@rneui/base";
 import axios from "axios";
-import BoxList from "./components/BoxList";
+// import BoxList from "./components/BoxList";
 import { Video } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 
@@ -102,9 +102,11 @@ const EpisodeScreen = () => {
           >
             <Video
               source={{
-                uri: "https://wwwx16.gofcdn.com/videos/hls/tK9YbCFbsEvZHuYETn_N0g/1677607159/10625/a80af13ae85820b664b87e68fa55f4c8/ep.2.1657689175.720.m3u8",
+                uri: "playbackurl",
               }}
               useNativeControls
+              shouldPlay
+              isMuted={false}
               PosterComponent={
                 <Image
                   source={{ uri: image }}
@@ -113,7 +115,17 @@ const EpisodeScreen = () => {
                 />
               }
               resizeMode="contain"
-              style={{ width: "100%", height: 300 }}
+              style={{
+                width: "100%",
+                height: 300,
+                borderColor: colorScheme === "dark" ? "#fff" : "#000",
+                borderWidth: 0.5,
+                shadowColor: colorScheme === "dark" ? "#fff" : "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+              }}
             />
           </View>
           <View
@@ -174,10 +186,10 @@ const EpisodeScreen = () => {
                 {animeinfo?.episodes?.length}
               </Text>
             </View>
-            <BoxList
+            {/* <BoxList
               totalEpisodes={animeinfo?.episodes?.length}
               currentEpisode={epNum}
-            />
+            /> */}
           </View>
         </ScrollView>
       )}

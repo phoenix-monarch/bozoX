@@ -16,12 +16,11 @@ import { openLink } from "../lib/OpenLink";
 import { links } from "../lib/config/links";
 const SettingsScreen = ({ navigation }) => {
   const colorScheme = useColorScheme();
-  const version = "0.0.2";
+  const version = "0.0.3";
   const appVersion = Constants.manifest.version;
   let [fontsLoaded] = useFonts({
     Comfortaa_700Bold,
   });
-
   useEffect(() => {
     const backAction = () => {
       navigation.navigate("Home");
@@ -62,13 +61,13 @@ const SettingsScreen = ({ navigation }) => {
             backgroundColor: colorScheme === "dark" ? "#171717" : "#fff",
           }}
         >
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.navigate("Account");
             }}
           >
             <ListItem icon="account-circle" title="Account" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("Translations");

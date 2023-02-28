@@ -55,8 +55,7 @@ const HomeScreen = ({ navigation }) => {
   //   return () => backHandler.remove();
   // }, []);
   //  alert on trying to exit app
-  
-    
+
   useEffect(() => {
     getRecentEpisodes();
     getPopularAnime();

@@ -189,6 +189,7 @@ const AnimeScreen = () => {
             style={{
               color: colorScheme === "dark" ? "#fff" : "#000",
               fontSize: 20,
+              marginBottom: 10,
             }}
           >
             Episodes
